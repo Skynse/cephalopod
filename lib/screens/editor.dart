@@ -28,7 +28,7 @@ class _EditorState extends State<Editor> {
               "Nothing here\nTry creating a new file",
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 30, color: Color.fromARGB(100, 255, 255, 255)),
+                  fontSize: 30, color: Color.fromARGB(255, 160, 160, 160)),
             ),
           ))
         : Scaffold(
@@ -59,7 +59,7 @@ class _EditorState extends State<Editor> {
                   ),
                   keyboardType: TextInputType.multiline,
                   enableInteractiveSelection: true,
-                  maxLines: null,
+                  maxLines: 99999,
                 ),
               ),
             ),

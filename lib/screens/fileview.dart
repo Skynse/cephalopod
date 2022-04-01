@@ -55,6 +55,9 @@ class _FileViewState extends State<FileView> {
                                           setState(() {
                                             snapshot.data[index]
                                                 .delete(context);
+                                            Provider.of<EditorModel>(context,
+                                                    listen: false)
+                                                .setPopulated(false);
                                             // clear editor if files = 0
                                             if (snapshot.data.length == 1) {
                                               Provider.of<EditorModel>(context,
