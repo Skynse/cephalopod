@@ -173,7 +173,7 @@ class FileItem {
     return File(path).readAsStringSync();
   }
 
-  get size => File(path).lengthSync();
+  get size => File(path).lengthSync() + 1;
 
   void delete(BuildContext context) {
     File(path).deleteSync();
@@ -189,10 +189,11 @@ class FileItem {
   rename(String newName) {
     //rename file
     name = newName;
-    path.replaceFirst(name, newName);
+    var oldName = path.split('/').last;
+    var path_ = path.replaceAll(oldName, newName);
 
     //rename file in file system
-    File(path).renameSync(path);
+    File(path).renameSync(path_);
     //update name
 
     //update path
