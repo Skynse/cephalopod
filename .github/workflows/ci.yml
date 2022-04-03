@@ -18,4 +18,6 @@ jobs:
           channel: "stable"        
       - run: flutter pub get
       - run: flutter clean
+      - run: flutter config --enable-linux-desktop
       - run: flutter build linux
+
