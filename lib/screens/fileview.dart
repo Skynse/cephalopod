@@ -210,12 +210,11 @@ class FileItem {
     return await File(path).writeAsString(controller.text);
   }
 
-  rename(self, String newName) {
+  rename(String newName) {
     //rename file
     name = newName;
     var oldName = path.split('/').last;
     var path_ = path.replaceAll(oldName, newName);
-    self.path = path_;
     //rename file in file system
     File(path).renameSync(path_);
     //update name
