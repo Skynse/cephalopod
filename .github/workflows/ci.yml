@@ -23,4 +23,8 @@ jobs:
       - run: flutter clean
       - run: flutter config --enable-linux-desktop
       - run: flutter build linux
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/linux/x64/release/bundle/*"
 
