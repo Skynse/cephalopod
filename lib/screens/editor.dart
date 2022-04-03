@@ -13,11 +13,13 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
+  @override
   void dispose() {
     super.dispose();
+    _controller.dispose();
   }
 
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     _controller.text = Provider.of<EditorModel>(context).text;
