@@ -29,11 +29,7 @@ class _SettingsSwitchState extends State<SettingsSwitch> {
       future: openConfig(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var config = snapshot.data;
-          var darkTheme = getProperty(config, 'darkTheme').then((String value) {
-            v = value.toLowerCase() == 'true';
-          });
-          return Container(
+          return SizedBox(
               height: 20,
               child: Row(children: [
                 Expanded(child: Text(widget.title)),
