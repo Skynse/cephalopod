@@ -25,7 +25,8 @@ class _StatusBarState extends State<StatusBar> {
             "char count: ${Provider.of<EditorModel>(context).textlength}",
             style: const TextStyle(color: Color.fromARGB(255, 53, 53, 53)),
           ),
-          Text(" filename: ${Provider.of<EditorModel>(context).filename}",
+          Text(
+              " filename: ${Provider.of<EditorModel>(context).filename.split('/').last}",
               style: const TextStyle(color: Color.fromARGB(255, 53, 53, 53))),
         ],
       ),
