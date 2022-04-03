@@ -13,13 +13,17 @@ class Editor extends StatefulWidget {
 }
 
 class _EditorState extends State<Editor> {
-  TextEditingController controller = TextEditingController();
+  void dispose() {
+    super.dispose();
+  }
 
+  TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    controller.text = Provider.of<EditorModel>(context).text;
-    controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: controller.text.length));
+    _controller.text = Provider.of<EditorModel>(context).text;
+    _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: Provider.of<EditorModel>(context).position));
+
     bool populated = Provider.of<EditorModel>(context).populated;
     return !populated
         ? const Scaffold(
@@ -32,35 +36,33 @@ class _EditorState extends State<Editor> {
             ),
           ))
         : Scaffold(
-            body: Container(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: controller,
-                  toolbarOptions: const ToolbarOptions(
-                    selectAll: true,
-                    copy: true,
-                    cut: true,
-                    paste: true,
-                  ),
-                  onChanged: (val) {
-                    setState(() {
-                      Provider.of<PreviewModel>(context, listen: false)
-                          .updatePreview(val);
-                      Provider.of<EditorModel>(context, listen: false).text =
-                          val;
-                      Provider.of<EditorModel>(context, listen: false)
-                          .saveFile();
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    //remove line
-                    border: InputBorder.none,
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  enableInteractiveSelection: true,
-                  maxLines: 99999,
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _controller,
+                toolbarOptions: const ToolbarOptions(
+                  selectAll: true,
+                  copy: true,
+                  cut: true,
+                  paste: true,
                 ),
+                onChanged: (val) {
+                  Provider.of<EditorModel>(context, listen: false).position =
+                      _controller.selection.baseOffset;
+                  Provider.of<PreviewModel>(context, listen: false)
+                      .updatePreview(val);
+
+                  Provider.of<EditorModel>(context, listen: false).text = val;
+
+                  Provider.of<EditorModel>(context, listen: false).saveFile();
+                },
+                decoration: const InputDecoration(
+                  //remove line
+                  border: InputBorder.none,
+                ),
+                keyboardType: TextInputType.multiline,
+                enableInteractiveSelection: true,
+                maxLines: 99999,
               ),
             ),
           );

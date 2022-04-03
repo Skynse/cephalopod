@@ -8,10 +8,17 @@ class EditorModel extends ChangeNotifier {
   int _textlength = 0;
   String _filename = "";
   bool populated = false;
+  int _position = 0;
 
   String get text => _text;
   String get filename => _filename;
   int get textlength => _textlength;
+  int get position => _position;
+
+  set position(int position) {
+    _position = position;
+    notifyListeners();
+  }
 
   void setActiveFilename(String name) {
     _filename = name;

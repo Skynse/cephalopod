@@ -11,6 +11,12 @@ class Preview extends StatefulWidget {
 
 class _PreviewState extends State<Preview> {
   @override
+  void dispose() {
+    super.dispose();
+    Provider.of<PreviewModel>(context, listen: false).dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
         decoration: const BoxDecoration(

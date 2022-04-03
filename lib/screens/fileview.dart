@@ -50,7 +50,7 @@ class _FileViewState extends State<FileView> {
                                       controller: _controller,
                                     )),
                                     IconButton(
-                                        icon: Icon(Icons.delete),
+                                        icon: const Icon(Icons.delete),
                                         onPressed: () {
                                           setState(() {
                                             snapshot.data[index]
@@ -80,7 +80,7 @@ class _FileViewState extends State<FileView> {
                                       "size: ${snapshot.data[index].size}"),
                                   actions: [
                                     ElevatedButton(
-                                      child: Text("Ok"),
+                                      child: const Text("Ok"),
                                       onPressed: () {
                                         setState(() {
                                           snapshot.data[index]
@@ -90,7 +90,7 @@ class _FileViewState extends State<FileView> {
                                       },
                                     ),
                                     ElevatedButton(
-                                      child: Text("Cancel"),
+                                      child: const Text("Cancel"),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -99,19 +99,43 @@ class _FileViewState extends State<FileView> {
                                 );
                               });
                         },
-                        child: ListTile(
-                            title: Text(snapshot.data[index].name),
-                            onTap: () {
-                              Provider.of<EditorModel>(context, listen: false)
-                                  .setActiveFilename(snapshot.data[index].path);
-                              Provider.of<EditorModel>(context, listen: false)
-                                  .setPopulated(true);
-                              Provider.of<EditorModel>(context, listen: false)
-                                  .text = snapshot.data[index].getFileText();
-                              Provider.of<PreviewModel>(context, listen: false)
-                                  .updatePreview(
-                                      snapshot.data[index].getFileText());
-                            }),
+                        child: Row(children: [
+                          Expanded(
+                            child: ListTile(
+                              title: Text(snapshot.data[index].name),
+                              onTap: () {
+                                setState(() {
+                                  Provider.of<EditorModel>(context,
+                                          listen: false)
+                                      .position = 0;
+                                  Provider.of<EditorModel>(context,
+                                          listen: false)
+                                      .setActiveFilename(
+                                          snapshot.data[index].path);
+                                  Provider.of<EditorModel>(context,
+                                          listen: false)
+                                      .setPopulated(true);
+                                  Provider.of<EditorModel>(context,
+                                              listen: false)
+                                          .text =
+                                      snapshot.data[index].getFileText();
+                                  Provider.of<PreviewModel>(context,
+                                          listen: false)
+                                      .updatePreview(
+                                          snapshot.data[index].getFileText());
+                                });
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                snapshot.data[index].delete(context);
+                              });
+                            },
+                            icon: const Icon(Icons.delete),
+                          )
+                        ]),
                       );
                     },
                   );
@@ -186,12 +210,12 @@ class FileItem {
     return await File(path).writeAsString(controller.text);
   }
 
-  rename(String newName) {
+  rename(self, String newName) {
     //rename file
     name = newName;
     var oldName = path.split('/').last;
     var path_ = path.replaceAll(oldName, newName);
-
+    self.path = path_;
     //rename file in file system
     File(path).renameSync(path_);
     //update name

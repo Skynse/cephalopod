@@ -9,6 +9,12 @@ class StatusBar extends StatefulWidget {
 
 class _StatusBarState extends State<StatusBar> {
   @override
+  void dispose() {
+    super.dispose();
+    Provider.of<EditorModel>(context, listen: false).dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(

@@ -44,7 +44,7 @@ class App extends StatelessWidget {
         children: [
           Expanded(
             child: Row(children: [
-              SideBar(),
+              const SideBar(),
               const Divider(color: Colors.white, thickness: 2, endIndent: 5),
               FileView(),
               const Divider(color: Colors.white, thickness: 2, endIndent: 5),
