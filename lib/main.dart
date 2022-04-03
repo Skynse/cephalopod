@@ -40,24 +40,27 @@ class App extends StatelessWidget {
         backgroundColor: Colors.white,
         primarySwatch: Colors.blue,
       ),
-      home: Column(
-        children: [
-          Expanded(
-            child: Row(children: [
-              const SideBar(),
-              const Divider(color: Colors.white, thickness: 2, endIndent: 5),
-              FileView(),
-              const Divider(color: Colors.white, thickness: 2, endIndent: 5),
-              const Expanded(
-                child: Editor(),
-              ),
-              const Expanded(
-                child: Preview(),
-              )
-            ]),
-          ),
-          SizedBox(height: 20, child: StatusBar()),
-        ],
+      home: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Expanded(
+              child: Row(children: [
+                const SideBar(),
+                const Divider(color: Colors.white, thickness: 2, endIndent: 5),
+                FileView(),
+                const Divider(color: Colors.white, thickness: 2, endIndent: 5),
+                const Expanded(
+                  child: Editor(),
+                ),
+                const Expanded(
+                  child: Preview(),
+                )
+              ]),
+            ),
+            SizedBox(height: 20, child: StatusBar()),
+          ],
+        ),
       ),
     );
   }
