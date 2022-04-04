@@ -2,7 +2,7 @@
 
 Minimalist markdown note editor written in Flutter
 
-![preview](assets/flutter_01.png)
+![preview](assets/prev2.png)
 
 ## Features
 
