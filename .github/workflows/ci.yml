@@ -29,5 +29,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/linux/x64/release/bundle/*"
-          tag
+          tag: v1.0.${{github.run_number}}
 
