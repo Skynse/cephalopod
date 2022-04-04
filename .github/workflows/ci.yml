@@ -25,9 +25,15 @@ jobs:
       - run: flutter clean
       - run: flutter config --enable-linux-desktop
       - run: flutter build linux
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: cephalopod-${{github.ref_name}}-linux.zip
+          directory: build/linux/x64/release/bundle
       - name: Create Github Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/linux/x64/release/bundle/*"
+          artifacts: "build/linux/x64/release/bundle/cephalopod-${{github.ref_name}}-linux.zip"
           tag: v1.0.${{github.run_number}}
 
