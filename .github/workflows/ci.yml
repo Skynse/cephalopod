@@ -7,7 +7,7 @@ on:
     branches:
       - master 
     tags:
-      - latest
+      - 'latest'
 
 jobs: 
   build:
@@ -29,4 +29,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/linux/x64/release/bundle/*"
+          tag
 
