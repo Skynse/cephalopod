@@ -9,7 +9,7 @@ Minimalist markdown note editor written in Flutter
 - Markdown editor
 - Preview
 - Save and load notes
-- Search (soon)
+- Search
 - Open any folder as a workspace(soon)
 - Export notes to pdf (soon)
 - Export notes to html (soon)
