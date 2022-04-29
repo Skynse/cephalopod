@@ -4,15 +4,19 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:cephalopod/models/editor_model.dart';
 
-import '../models/preview_model.dart';
+import 'package:cephalopod/models/preview_model.dart';
+import 'package:cephalopod/logic/export_pdf.dart';
+import 'package:cephalopod/screens/export_page_pdf.dart';
 
 class FileView extends StatefulWidget {
+  const FileView({Key? key}) : super(key: key);
   @override
   _FileViewState createState() => _FileViewState();
 }
 
 class _FileViewState extends State<FileView> {
   final TextEditingController _controller = TextEditingController();
+  String filter = "";
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,7 +31,31 @@ class _FileViewState extends State<FileView> {
                     onPressed: () => setState(() {
                           createNewFile();
                         })),
+                IconButton(
+                  icon: const Icon(Icons.picture_as_pdf),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ExportPdfPopup();
+                        });
+                  },
+                ),
               ],
+            ),
+            // search bar
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10),
+                hintText: 'Search',
+                border: InputBorder.none,
+              ),
+              onChanged: (text) {
+                setState(() {
+                  filter = text;
+                });
+              },
             ),
             Expanded(
                 child: FutureBuilder(
@@ -159,10 +187,17 @@ class _FileViewState extends State<FileView> {
     List<FileSystemEntity> entities = dir.listSync();
     for (FileSystemEntity entity in entities) {
       if (entity is File) {
-        files.add(FileItem(
-          entity.path.split('/').last,
-          entity.path,
-        ));
+        if (entity.path.contains(filter) && filter != "") {
+          files.add(FileItem(
+            entity.path.split('/').last,
+            entity.path,
+          ));
+        } else if (filter == "") {
+          files.add(FileItem(
+            entity.path.split('/').last,
+            entity.path,
+          ));
+        }
       }
     }
     return files;

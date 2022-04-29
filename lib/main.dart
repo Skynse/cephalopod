@@ -10,6 +10,7 @@ import 'package:cephalopod/models/preview_model.dart';
 import 'package:cephalopod/screens/fileview.dart';
 import 'package:cephalopod/factory/initialize.dart';
 import 'package:cephalopod/factory/config.dart';
+import 'package:cephalopod/theme/style.dart';
 
 void main() {
   initDir();
@@ -38,7 +39,8 @@ class App extends StatelessWidget {
       title: 'Cephalopod',
       theme: ThemeData(
         backgroundColor: Colors.white,
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.white,
+        primarySwatch: Colors.grey,
       ),
       home: Container(
         color: Colors.white,
