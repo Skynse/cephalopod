@@ -187,7 +187,8 @@ class _FileViewState extends State<FileView> {
     List<FileSystemEntity> entities = dir.listSync();
     for (FileSystemEntity entity in entities) {
       if (entity is File) {
-        if (entity.path.contains(filter) && filter != "") {
+        if (entity.path.toLowerCase().contains(filter.toLowerCase()) &&
+            filter != "") {
           files.add(FileItem(
             entity.path.split('/').last,
             entity.path,
