@@ -7,6 +7,7 @@ import 'package:cephalopod/models/editor_model.dart';
 import 'package:cephalopod/models/preview_model.dart';
 import 'package:cephalopod/logic/export_pdf.dart';
 import 'package:cephalopod/screens/export_page_pdf.dart';
+import 'package:cephalopod/core/fuzzy_match.dart';
 
 class FileView extends StatefulWidget {
   const FileView({Key? key}) : super(key: key);
@@ -186,8 +187,9 @@ class _FileViewState extends State<FileView> {
     Directory dir = Directory("$name/cephalopod");
     List<FileSystemEntity> entities = dir.listSync();
     for (FileSystemEntity entity in entities) {
+      String filename = entity.path.split("/").last;
       if (entity is File) {
-        if (entity.path.contains(filter) && filter != "") {
+        if (match(filename, filter.toLowerCase()) && filter != "") {
           files.add(FileItem(
             entity.path.split('/').last,
             entity.path,
