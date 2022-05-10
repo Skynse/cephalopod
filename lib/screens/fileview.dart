@@ -253,7 +253,7 @@ class FileItem {
   rename(String newName) {
     //rename file
     name = newName;
-    var oldName = path.split('/').last;
+    var oldName = Platform.isLinux? path.split('/').last : path.split('\\').last;
     var path_ = path.replaceAll(oldName, newName);
     //rename file in file system
     File(path).renameSync(path_);
