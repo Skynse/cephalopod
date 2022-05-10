@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'dart:math';
 
 bool match(String s1, String s2) {
