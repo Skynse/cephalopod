@@ -8,6 +8,7 @@ import 'package:cephalopod/models/preview_model.dart';
 import 'package:cephalopod/logic/export_pdf.dart';
 import 'package:cephalopod/screens/export_page_pdf.dart';
 import 'package:cephalopod/core/fuzzy_match.dart';
+import 'package:flutter/foundation.dart';
 
 class FileView extends StatefulWidget {
   const FileView({Key? key}) : super(key: key);
@@ -17,6 +18,8 @@ class FileView extends StatefulWidget {
 
 class _FileViewState extends State<FileView> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
   String filter = "";
   @override
   Widget build(BuildContext context) {
@@ -76,7 +79,7 @@ class _FileViewState extends State<FileView> {
                                   title: Row(children: [
                                     Expanded(
                                         child: TextFormField(
-                                      controller: _controller,
+                                      controller: _nameController,
                                     )),
                                     IconButton(
                                         icon: const Icon(Icons.delete),
@@ -113,7 +116,7 @@ class _FileViewState extends State<FileView> {
                                       onPressed: () {
                                         setState(() {
                                           snapshot.data[index]
-                                              .rename(_controller.text);
+                                              .rename(_nameController.text);
                                           Navigator.pop(context);
                                         });
                                       },
@@ -187,16 +190,16 @@ class _FileViewState extends State<FileView> {
     Directory dir = Directory("$name/cephalopod");
     List<FileSystemEntity> entities = dir.listSync();
     for (FileSystemEntity entity in entities) {
-      String filename = entity.path.split("/").last;
+      String filename = Platform.isLinux ? entity.path.split("/").last : entity.path.split("\\").last;
       if (entity is File) {
         if (match(filename, filter.toLowerCase()) && filter != "") {
           files.add(FileItem(
-            entity.path.split('/').last,
+            filename,
             entity.path,
           ));
         } else if (filter == "") {
           files.add(FileItem(
-            entity.path.split('/').last,
+           filename,
             entity.path,
           ));
         }
@@ -250,7 +253,7 @@ class FileItem {
   rename(String newName) {
     //rename file
     name = newName;
-    var oldName = path.split('/').last;
+    var oldName = Platform.isLinux? path.split('/').last : path.split('\\').last;
     var path_ = path.replaceAll(oldName, newName);
     //rename file in file system
     File(path).renameSync(path_);
