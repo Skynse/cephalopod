@@ -190,7 +190,9 @@ class _FileViewState extends State<FileView> {
     Directory dir = Directory("$name/cephalopod");
     List<FileSystemEntity> entities = dir.listSync();
     for (FileSystemEntity entity in entities) {
-      String filename = Platform.isLinux ? entity.path.split("/").last : entity.path.split("\\").last;
+      String filename = Platform.isLinux
+          ? entity.path.split("/").last
+          : entity.path.split("\\").last;
       if (entity is File) {
         if (match(filename, filter.toLowerCase()) && filter != "") {
           files.add(FileItem(
@@ -199,7 +201,7 @@ class _FileViewState extends State<FileView> {
           ));
         } else if (filter == "") {
           files.add(FileItem(
-           filename,
+            filename,
             entity.path,
           ));
         }
@@ -253,7 +255,8 @@ class FileItem {
   rename(String newName) {
     //rename file
     name = newName;
-    var oldName = Platform.isLinux? path.split('/').last : path.split('\\').last;
+    var oldName =
+        Platform.isLinux ? path.split('/').last : path.split('\\').last;
     var path_ = path.replaceAll(oldName, newName);
     //rename file in file system
     File(path).renameSync(path_);
