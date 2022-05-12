@@ -1,3 +1,4 @@
+import 'package:cephalopod/core/summarize.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -159,6 +160,10 @@ class _FileViewState extends State<FileView> {
                           Expanded(
                             child: ListTile(
                               title: Text(snapshot.data[index].name),
+                              isThreeLine: true,
+                              subtitle: Text(
+                                summarize(snapshot.data[index].getFileText()),
+                              ),
                               onTap: () {
                                 setState(() {
                                   Provider.of<EditorModel>(context,
