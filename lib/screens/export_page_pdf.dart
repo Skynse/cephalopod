@@ -8,7 +8,7 @@ class ExportPage extends StatefulWidget {
 
 class _ExportPageState extends State<ExportPage> {
   Widget buttonSection = Container(
-    padding: EdgeInsets.only(top: 16),
+    padding: const EdgeInsets.only(top: 16),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

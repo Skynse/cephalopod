@@ -54,7 +54,6 @@ class _SideBarState extends State<SideBar> {
                                   ),
                                   content: Column(children: const [
                                     // dark theme on or off
-                                    SettingsSwitch(title: "DarkTheme"),
                                   ]),
                                 );
                               })
