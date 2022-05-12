@@ -10,6 +10,8 @@ import 'package:cephalopod/screens/export_page_pdf.dart';
 import 'package:cephalopod/core/fuzzy_match.dart';
 import 'package:flutter/foundation.dart';
 
+import '../models/theme_model.dart';
+
 class FileView extends StatefulWidget {
   const FileView({Key? key}) : super(key: key);
   @override
@@ -20,7 +22,14 @@ class _FileViewState extends State<FileView> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    _nameController.dispose();
+  }
+
   String filter = "";
+  bool themeValue = false;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -45,12 +54,24 @@ class _FileViewState extends State<FileView> {
                         });
                   },
                 ),
+                Switch.adaptive(
+                    activeColor: Provider.of<ThemeModel>(context, listen: true)
+                        .themeData
+                        .primary,
+                    value: themeValue,
+                    onChanged: (value) {
+                      setState(() {
+                        themeValue = value;
+                        Provider.of<ThemeModel>(context, listen: false)
+                            .setGlobalTheme(themeValue);
+                      });
+                    }),
               ],
             ),
             // search bar
             TextField(
               controller: _controller,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 contentPadding: EdgeInsets.all(10),
                 hintText: 'Search',
                 border: InputBorder.none,

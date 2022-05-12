@@ -10,7 +10,7 @@ import 'package:cephalopod/models/preview_model.dart';
 import 'package:cephalopod/screens/fileview.dart';
 import 'package:cephalopod/factory/initialize.dart';
 import 'package:cephalopod/factory/config.dart';
-import 'package:cephalopod/theme/style.dart';
+import 'package:cephalopod/theme/theme.dart';
 
 void main() {
   initDir();
@@ -37,21 +37,32 @@ class App extends StatelessWidget {
       //darkTheme: Provider.of<ThemeModel>(context).themeData,
       debugShowCheckedModeBanner: false,
       title: 'Cephalopod',
+      // set color scheme
       theme: ThemeData(
-        backgroundColor: Colors.white,
-        primaryColor: Colors.white,
-        primarySwatch: Colors.grey,
+        colorScheme: Provider.of<ThemeModel>(context).themeData,
       ),
       home: Container(
-        color: Colors.white,
+        color: Provider.of<ThemeModel>(context, listen: false)
+            .themeData
+            .surfaceVariant,
         child: Column(
           children: [
             Expanded(
               child: Row(children: [
                 const SideBar(),
-                const Divider(color: Colors.white, thickness: 2, endIndent: 5),
-                FileView(),
-                const Divider(color: Colors.white, thickness: 2, endIndent: 5),
+                Divider(
+                    color: Provider.of<ThemeModel>(context, listen: false)
+                        .themeData
+                        .primary,
+                    thickness: 2,
+                    endIndent: 5),
+                const FileView(),
+                Divider(
+                    color: Provider.of<ThemeModel>(context, listen: false)
+                        .themeData
+                        .primary,
+                    thickness: 2,
+                    endIndent: 5),
                 const Expanded(
                   child: Editor(),
                 ),
