@@ -23,32 +23,7 @@ class _PreviewState extends State<Preview> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment(-1.0, -4.0),
-                end: Alignment(1.0, 4.0),
-                colors: [
-                  Provider.of<ThemeModel>(context, listen: true)
-                      .themeData
-                      .primary,
-                  Provider.of<ThemeModel>(context, listen: true)
-                      .themeData
-                      .primary,
-                ]),
-            boxShadow: [
-              BoxShadow(
-                  color: Provider.of<ThemeModel>(context, listen: false)
-                      .themeData
-                      .primary,
-                  offset: const Offset(5.0, 5.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0),
-              const BoxShadow(
-                  color: Color.fromARGB(255, 47, 47, 47),
-                  offset: Offset(-5.0, -5.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0),
-            ]),
+        color: Provider.of<ThemeModel>(context, listen: true).themeData.primary,
         child: Markdown(
           controller: ScrollController(),
           data: Provider.of<PreviewModel>(context).previewText,

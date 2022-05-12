@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cephalopod/theme/style.dart';
+import 'package:cephalopod/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:cephalopod/models/preview_model.dart';
+import 'package:cephalopod/models/theme_model.dart';
 
 import '../models/editor_model.dart';
 
@@ -38,9 +39,12 @@ class _EditorState extends State<Editor> {
             ),
           ))
         : Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(8.0),
+            body: Container(
+              color: Provider.of<ThemeModel>(context, listen: true)
+                  .themeData
+                  .primary,
               child: TextField(
+                cursorColor: Color.fromARGB(255, 198, 33, 80),
                 controller: _controller,
                 toolbarOptions: const ToolbarOptions(
                   selectAll: true,
