@@ -30,10 +30,6 @@ class _SideBarState extends State<SideBar> {
       width: 70,
       child: Drawer(
         elevation: 0,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-        )),
         child: Column(
           children: [
             IconButton(icon: const Icon(Icons.folder), onPressed: () => null),

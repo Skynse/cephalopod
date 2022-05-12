@@ -11,6 +11,7 @@ import 'package:cephalopod/screens/fileview.dart';
 import 'package:cephalopod/factory/initialize.dart';
 import 'package:cephalopod/factory/config.dart';
 import 'package:cephalopod/theme/theme.dart';
+import 'package:cephalopod/components/toolbar.dart';
 
 void main() {
   initDir();
@@ -50,48 +51,38 @@ class App extends StatelessWidget {
             Expanded(
               child: Row(children: [
                 const SideBar(),
-                Divider(
-                    color: Provider.of<ThemeModel>(context, listen: false)
-                        .themeData
-                        .primary,
-                    thickness: 2,
-                    endIndent: 5),
                 const FileView(),
                 Divider(
-                    color: Provider.of<ThemeModel>(context, listen: false)
+                    color: Provider.of<ThemeModel>(context, listen: true)
                         .themeData
                         .primary,
                     thickness: 2,
                     endIndent: 5),
-                const Expanded(
-                  child: Editor(),
+
+                // row for toolbar then editor and preview
+                Expanded(
+                  child: Column(children: [
+                    const SizedBox(height: 40, child: ToolBar()),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            child: Editor(),
+                          ),
+                          const Expanded(
+                            child: Preview(),
+                          ),
+                        ],
+                      ),
+                    )
+                  ]),
                 ),
-                const Expanded(
-                  child: Preview(),
-                )
               ]),
             ),
             SizedBox(height: 20, child: StatusBar()),
           ],
         ),
       ),
-    );
-  }
-}
-
-class Footer extends StatefulWidget {
-  const Footer({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _FooterState();
-}
-
-class _FooterState extends State<Footer> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 10,
-      color: Colors.blue,
     );
   }
 }

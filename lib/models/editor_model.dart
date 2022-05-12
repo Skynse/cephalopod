@@ -14,6 +14,8 @@ class EditorModel extends ChangeNotifier {
   String get filename => _filename;
   int get textlength => _textlength;
   int get position => _position;
+  String get splitted_name =>
+      Platform.isLinux ? _filename.split('/').last : _filename.split('\\').last;
 
   set position(int position) {
     _position = position;

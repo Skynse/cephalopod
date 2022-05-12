@@ -11,6 +11,7 @@ import 'package:cephalopod/core/fuzzy_match.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/theme_model.dart';
+import 'package:cephalopod/core/file_item.dart';
 
 class FileView extends StatefulWidget {
   const FileView({Key? key}) : super(key: key);
@@ -38,34 +39,13 @@ class _FileViewState extends State<FileView> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () => setState(() {
                           createNewFile();
                         })),
-                IconButton(
-                  icon: const Icon(Icons.picture_as_pdf),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return ExportPdfPopup();
-                        });
-                  },
-                ),
-                Switch.adaptive(
-                    activeColor: Provider.of<ThemeModel>(context, listen: true)
-                        .themeData
-                        .primary,
-                    value: themeValue,
-                    onChanged: (value) {
-                      setState(() {
-                        themeValue = value;
-                        Provider.of<ThemeModel>(context, listen: false)
-                            .setGlobalTheme(themeValue);
-                      });
-                    }),
               ],
             ),
             // search bar
@@ -92,8 +72,31 @@ class _FileViewState extends State<FileView> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onSecondaryTap: () {
-                          // context menu popup
+                          // open options dialog with rename, delete, export
                           showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Options'),
+                                  content: Column(
+                                    children: [
+                                      Text('Rename'),
+                                      Text('Delete'),
+                                      Text('Export'),
+                                    ],
+                                  ),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+                          // context menu popup
+                          /* showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
@@ -150,7 +153,7 @@ class _FileViewState extends State<FileView> {
                                     ),
                                   ],
                                 );
-                              });
+                              }); */
                         },
                         child: Row(children: [
                           Expanded(
@@ -250,41 +253,4 @@ Future<String> getPath() {
   return getApplicationDocumentsDirectory().then((dir) {
     return dir.path;
   });
-}
-
-class FileItem {
-  String name;
-  final String path;
-
-  String getFileText() {
-    return File(path).readAsStringSync();
-  }
-
-  get size => File(path).lengthSync() + 1;
-
-  void delete(BuildContext context) {
-    File(path).deleteSync();
-    Provider.of<EditorModel>(context, listen: false).init();
-
-    Provider.of<PreviewModel>(context, listen: false).updatePreview("");
-  }
-
-  Future<File> save(controller) async {
-    return await File(path).writeAsString(controller.text);
-  }
-
-  rename(String newName) {
-    //rename file
-    name = newName;
-    var oldName =
-        Platform.isLinux ? path.split('/').last : path.split('\\').last;
-    var path_ = path.replaceAll(oldName, newName);
-    //rename file in file system
-    File(path).renameSync(path_);
-    //update name
-
-    //update path
-  }
-
-  FileItem(this.name, this.path);
 }
