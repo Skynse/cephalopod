@@ -23,7 +23,9 @@ class _PreviewState extends State<Preview> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Provider.of<ThemeModel>(context, listen: true).themeData.primary,
+        color: Provider.of<ThemeModel>(context, listen: true)
+            .themeData
+            .secondaryContainer,
         child: Markdown(
           controller: ScrollController(),
           data: Provider.of<PreviewModel>(context).previewText,

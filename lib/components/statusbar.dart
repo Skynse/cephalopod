@@ -22,12 +22,12 @@ class _StatusBarState extends State<StatusBar> {
       child: Row(
         children: [
           Text(
-            "char count: ${Provider.of<EditorModel>(context).textlength}",
-            style: const TextStyle(color: Color.fromARGB(255, 53, 53, 53)),
+            "char count: ${Provider.of<EditorModel>(context, listen: true).textlength}",
+            style: const TextStyle(color: Color.fromARGB(255, 216, 14, 74)),
           ),
           Text(
-              " filename: ${Provider.of<EditorModel>(context).filename.split('/').last}",
-              style: const TextStyle(color: Color.fromARGB(255, 53, 53, 53))),
+              " filename: ${Provider.of<EditorModel>(context, listen: false).splitted_name}",
+              style: const TextStyle(color: Color.fromARGB(255, 216, 9, 81))),
         ],
       ),
     ));

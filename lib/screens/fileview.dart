@@ -6,12 +6,7 @@ import 'dart:io';
 import 'package:cephalopod/models/editor_model.dart';
 
 import 'package:cephalopod/models/preview_model.dart';
-import 'package:cephalopod/logic/export_pdf.dart';
-import 'package:cephalopod/screens/export_page_pdf.dart';
 import 'package:cephalopod/core/fuzzy_match.dart';
-import 'package:flutter/foundation.dart';
-
-import '../models/theme_model.dart';
 import 'package:cephalopod/core/file_item.dart';
 
 class FileView extends StatefulWidget {
@@ -32,6 +27,9 @@ class _FileViewState extends State<FileView> {
 
   String filter = "";
   bool themeValue = false;
+
+  List<String> summaries = [];
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -64,147 +62,85 @@ class _FileViewState extends State<FileView> {
               },
             ),
             Expanded(
-                child: FutureBuilder(
-              future: scanDir(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onSecondaryTap: () {
-                          // open options dialog with rename, delete, export
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Options'),
-                                  content: Column(
-                                    children: [
-                                      Text('Rename'),
-                                      Text('Delete'),
-                                      Text('Export'),
-                                    ],
-                                  ),
-                                  actions: [
-                                    FlatButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
+              child: FutureBuilder(
+                future: scanDir(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onSecondaryTap: () {
+                            // open options dialog with rename, delete, export
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Options'),
+                                    content: Column(
+                                      children: [
+                                        Text('Rename'),
+                                        Text('Delete'),
+                                        Text('Export'),
+                                      ],
                                     ),
-                                  ],
-                                );
-                              });
-                          // context menu popup
-                          /* showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Row(children: [
-                                    Expanded(
-                                        child: TextFormField(
-                                      controller: _nameController,
-                                    )),
-                                    IconButton(
-                                        icon: const Icon(Icons.delete),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text('Cancel'),
                                         onPressed: () {
-                                          setState(() {
-                                            snapshot.data[index]
-                                                .delete(context);
-                                            Provider.of<EditorModel>(context,
-                                                    listen: false)
-                                                .setPopulated(false);
-                                            // clear editor if files = 0
-                                            if (snapshot.data.length == 1) {
-                                              Provider.of<EditorModel>(context,
-                                                      listen: false)
-                                                  .setPopulated(false);
-
-                                              Provider.of<EditorModel>(context,
-                                                      listen: false)
-                                                  .text = "";
-                                              Provider.of<PreviewModel>(context,
-                                                      listen: false)
-                                                  .updatePreview("");
-                                            }
-                                          });
-
-                                          Navigator.pop(context);
-                                        }),
-                                  ]),
-                                  content: Text(
-                                      "size: ${snapshot.data[index].size}"),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: const Text("Ok"),
-                                      onPressed: () {
-                                        setState(() {
-                                          snapshot.data[index]
-                                              .rename(_nameController.text);
-                                          Navigator.pop(context);
-                                        });
-                                      },
-                                    ),
-                                    ElevatedButton(
-                                      child: const Text("Cancel"),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              }); */
-                        },
-                        child: Row(children: [
-                          Expanded(
-                            child: ListTile(
-                              title: Text(snapshot.data[index].name),
-                              isThreeLine: true,
-                              subtitle: Text(
-                                summarize(snapshot.data[index].getFileText()),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  Provider.of<EditorModel>(context,
-                                          listen: false)
-                                      .position = 0;
-                                  Provider.of<EditorModel>(context,
-                                          listen: false)
-                                      .setActiveFilename(
-                                          snapshot.data[index].path);
-                                  Provider.of<EditorModel>(context,
-                                          listen: false)
-                                      .setPopulated(true);
-                                  Provider.of<EditorModel>(context,
-                                              listen: false)
-                                          .text =
-                                      snapshot.data[index].getFileText();
-                                  Provider.of<PreviewModel>(context,
-                                          listen: false)
-                                      .updatePreview(
-                                          snapshot.data[index].getFileText());
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
                                 });
-                              },
+                          },
+                          child: Row(children: [
+                            Expanded(
+                              child: ListTile(
+                                title: Text(snapshot.data[index].name),
+                                subtitle: Text(
+                                  summarize(snapshot.data[index].getFileText()),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    Provider.of<EditorModel>(context,
+                                        listen: false)
+                                      ..fileItem = snapshot.data[index]
+                                      ..position = 0
+                                      ..setActiveFilename(
+                                          snapshot.data[index].path)
+                                      ..setPopulated(true)
+                                      ..text =
+                                          snapshot.data[index].getFileText();
+                                    Provider.of<PreviewModel>(context,
+                                            listen: false)
+                                        .updatePreview(
+                                            snapshot.data[index].getFileText());
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                snapshot.data[index].delete(context);
-                              });
-                            },
-                            icon: const Icon(Icons.delete),
-                          )
-                        ]),
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            )),
+                            IconButton(
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    snapshot.data[index].delete(context);
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.delete),
+                            )
+                          ]),
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -228,11 +164,13 @@ class _FileViewState extends State<FileView> {
             filename,
             entity.path,
           ));
+          summaries.add(summarize(entity.readAsStringSync()));
         } else if (filter == "") {
           files.add(FileItem(
             filename,
             entity.path,
           ));
+          summaries.add(summarize(entity.readAsStringSync()));
         }
       }
     }

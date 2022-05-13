@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:cephalopod/models/editor_model.dart';
 import 'package:cephalopod/models/preview_model.dart';
 
 class FileItem {
   String name;
-  final String path;
+  String path;
 
   String getFileText() {
     return File(path).readAsStringSync();
@@ -14,11 +15,10 @@ class FileItem {
 
   get size => File(path).lengthSync() + 1;
 
-  void delete(BuildContext context) {
-    File(path).deleteSync();
+  delete(BuildContext context) {
     Provider.of<EditorModel>(context, listen: false).init();
-
     Provider.of<PreviewModel>(context, listen: false).updatePreview("");
+    File(path).deleteSync();
   }
 
   Future<File> save(controller) async {
@@ -26,16 +26,15 @@ class FileItem {
   }
 
   rename(String newName) {
-    //rename file
-    name = newName;
-    var oldName =
-        Platform.isLinux ? path.split('/').last : path.split('\\').last;
+    var oldName = name;
     var path_ = path.replaceAll(oldName, newName);
     //rename file in file system
     File(path).renameSync(path_);
     //update name
+    name = newName;
 
     //update path
+    path = path_;
   }
 
   FileItem(this.name, this.path);
