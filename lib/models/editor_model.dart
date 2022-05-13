@@ -1,44 +1,84 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'package:cephalopod/core/file_item.dart';
+import 'package:cephalopod/core/summarize.dart';
 
 class EditorModel extends ChangeNotifier {
   String _text = "";
   int _textlength = 0;
-  String _filename = "";
+  String _activeFile = "";
   bool populated = false;
   int _position = 0;
+  int _namePosition = 0;
+  String _summary = "";
+  FileItem? _fileItem = null;
 
   String get text => _text;
-  String get filename => _filename;
+  String get activeFile => _activeFile;
   int get textlength => _textlength;
   int get position => _position;
-  String get splitted_name =>
-      Platform.isLinux ? _filename.split('/').last : _filename.split('\\').last;
+  int get namePosition => _namePosition;
+  String get summary => summarize(_text);
+  String get splitted_name => Platform.isLinux
+      ? _activeFile.split('/').last
+      : _activeFile.split('\\').last;
+
+  FileItem? get fileItem => _fileItem;
 
   set position(int position) {
     _position = position;
     notifyListeners();
   }
 
+  set namePosition(int position) {
+    _namePosition = position;
+    notifyListeners();
+  }
+
+  set summary(String summary) {
+    this.summary = summary;
+    notifyListeners();
+  }
+
   void setActiveFilename(String name) {
-    _filename = name;
+    _activeFile = name;
+    notifyListeners();
+  }
+
+  set fileItem(FileItem? fileItem) {
+    _fileItem = fileItem;
     notifyListeners();
   }
 
   void init() {
-    _filename = "";
+    _activeFile = "";
     _text = "";
     _textlength = 0;
+    _position = 0;
+    _namePosition = 0;
     notifyListeners();
   }
 
   Future<File> saveFile() async {
-    final file = await File(_filename).create(recursive: true);
+    final file = await File(_activeFile).create(recursive: true);
     file.writeAsString(_text);
     notifyListeners();
     return file;
+  }
+
+  //rename
+  void rename(String newName) {
+    var oldName = _activeFile;
+    var path_ = oldName.replaceAll(oldName, newName);
+    //rename file in file system
+    File(oldName).renameSync(path_);
+    //update name
+    _activeFile = path_;
+    notifyListeners();
   }
 
   void setPopulated(bool val) {
@@ -50,5 +90,11 @@ class EditorModel extends ChangeNotifier {
     _text = str;
     _textlength = str.length;
     notifyListeners();
+  }
+
+  get path {
+    var lastsep = _activeFile.lastIndexOf('/');
+    var path = _activeFile.substring(0, lastsep);
+    return path;
   }
 }

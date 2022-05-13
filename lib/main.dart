@@ -52,12 +52,6 @@ class App extends StatelessWidget {
               child: Row(children: [
                 const SideBar(),
                 const FileView(),
-                Divider(
-                    color: Provider.of<ThemeModel>(context, listen: true)
-                        .themeData
-                        .primary,
-                    thickness: 2,
-                    endIndent: 5),
 
                 // row for toolbar then editor and preview
                 Expanded(
@@ -65,11 +59,11 @@ class App extends StatelessWidget {
                     const SizedBox(height: 40, child: ToolBar()),
                     Expanded(
                       child: Row(
-                        children: [
-                          const Expanded(
+                        children: const [
+                          Expanded(
                             child: Editor(),
                           ),
-                          const Expanded(
+                          Expanded(
                             child: Preview(),
                           ),
                         ],

@@ -20,79 +20,92 @@ class _ToolBarState extends State<ToolBar> {
   @override
   void initState() {
     super.initState();
-    nameController.text =
-        Provider.of<EditorModel>(context, listen: false).splitted_name;
+    nameController.text = "";
+  }
 
-    nameController.addListener(() {
-      Provider.of<EditorModel>(context, listen: false)
-          .setActiveFilename(nameController.text);
-    });
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
   }
 
   bool themeValue = false;
   @override
   Widget build(BuildContext context) {
+    nameController.text =
+        Provider.of<EditorModel>(context, listen: false).splitted_name;
+    nameController.selection = TextSelection.fromPosition(TextPosition(
+        offset: Provider.of<EditorModel>(context, listen: false).namePosition));
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(left: 10, bottom: 10),
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  cursorColor: Color.fromARGB(255, 228, 29, 129),
-                  onEditingComplete: () {
-                    setState(() {
-                      Provider.of<EditorModel>(context, listen: false)
-                          .setActiveFilename(nameController.text);
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: 30,
+              child: TextField(
+                style: TextStyle(color: Color.fromARGB(255, 142, 142, 142)),
+                cursorColor: Color.fromARGB(255, 228, 29, 129),
+                onChanged: (value) {
+                  Provider.of<EditorModel>(context, listen: false)
+                      .namePosition = nameController.selection.baseOffset;
+                  setState(
+                    () {
+                      var oldPath =
+                          Provider.of<EditorModel>(context, listen: false)
+                              .activeFile;
+                      var oldName = oldPath.split("/").last;
 
-                      FileItem(
-                              nameController.text,
-                              Provider.of<EditorModel>(context, listen: false)
-                                  .filename)
-                          .rename(nameController.text);
-                    });
-                  },
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: nameController.text,
-                  ),
+                      var newpath = FileItem(
+                        oldName,
+                        oldPath,
+                      )..rename(value);
+                      Provider.of<EditorModel>(context, listen: false)
+                          .setActiveFilename(newpath.path);
+                    },
+                  );
+                },
+                controller: nameController
+                  ..text = Provider.of<EditorModel>(context, listen: false)
+                      .splitted_name,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(),
+                  border: InputBorder.none,
+                  hintText: nameController.text,
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.picture_as_pdf),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return ExportPdfPopup();
-                      });
-                },
-              ),
-              Switch.adaptive(
-                  activeThumbImage: const AssetImage('assets/thumbs/moon.png'),
-                  inactiveThumbImage: const AssetImage('assets/thumbs/sun.png'),
-                  inactiveThumbColor: Colors.transparent,
-                  activeColor: Provider.of<ThemeModel>(context, listen: true)
-                      .themeData
-                      .primary,
-                  trackColor: MaterialStateProperty.all(
-                      Provider.of<ThemeModel>(context, listen: true)
-                          .themeData
-                          .tertiary),
-                  value: themeValue,
-                  onChanged: (value) {
-                    setState(() {
-                      themeValue = value;
-                      Provider.of<ThemeModel>(context, listen: false)
-                          .setGlobalTheme(themeValue);
-                    });
-                  }),
-            ],
+            ),
           ),
-        ),
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ExportPdfPopup();
+                  });
+            },
+          ),
+          Switch.adaptive(
+              activeTrackColor: Color.fromARGB(255, 35, 210, 102),
+              inactiveTrackColor: Color.fromARGB(255, 210, 35, 105),
+              inactiveThumbColor: Colors.transparent,
+              activeColor: Provider.of<ThemeModel>(context, listen: true)
+                  .themeData
+                  .primary,
+              trackColor: MaterialStateProperty.all(
+                  Provider.of<ThemeModel>(context, listen: true)
+                      .themeData
+                      .tertiary),
+              value: themeValue,
+              onChanged: (value) {
+                setState(() {
+                  themeValue = value;
+                  Provider.of<ThemeModel>(context, listen: false)
+                      .setGlobalTheme(themeValue);
+                });
+              }),
+        ],
       ),
     );
   }

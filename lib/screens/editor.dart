@@ -23,11 +23,11 @@ class _EditorState extends State<Editor> {
   final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    _controller.text = Provider.of<EditorModel>(context).text;
-    _controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: Provider.of<EditorModel>(context).position));
+    _controller.text = Provider.of<EditorModel>(context, listen: false).text;
+    _controller.selection = TextSelection.fromPosition(TextPosition(
+        offset: Provider.of<EditorModel>(context, listen: false).position));
 
-    bool populated = Provider.of<EditorModel>(context).populated;
+    bool populated = Provider.of<EditorModel>(context, listen: true).populated;
     return !populated
         ? const Scaffold(
             body: Center(
@@ -63,6 +63,7 @@ class _EditorState extends State<Editor> {
                   Provider.of<EditorModel>(context, listen: false).saveFile();
                 },
                 decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.all(20),
                   //remove line
                   border: InputBorder.none,
                 ),
