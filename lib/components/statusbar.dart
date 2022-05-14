@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:cephalopod/models/editor_model.dart';
 
 class StatusBar extends StatefulWidget {
+  const StatusBar({Key? key}) : super(key: key);
   @override
   _StatusBarState createState() => _StatusBarState();
 }
@@ -26,7 +27,7 @@ class _StatusBarState extends State<StatusBar> {
             style: const TextStyle(color: Color.fromARGB(255, 216, 14, 74)),
           ),
           Text(
-              " filename: ${Provider.of<EditorModel>(context, listen: false).splitted_name}",
+              " filename: ${Provider.of<EditorModel>(context, listen: false).splittedName}",
               style: const TextStyle(color: Color.fromARGB(255, 216, 9, 81))),
         ],
       ),
