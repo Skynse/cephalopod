@@ -36,7 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
   flutter_markdown: ^0.6.9+1
-  flutter_treeview: ^1.0.7+1
   path_provider: ^2.0.9
 
 dev_dependencies:
