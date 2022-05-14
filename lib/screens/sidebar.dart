@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cephalopod/components/settingsItem.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({Key? key}) : super(key: key);
