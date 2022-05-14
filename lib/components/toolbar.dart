@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cephalopod/screens/export_page_pdf.dart';
-import 'package:cephalopod/theme/theme.dart';
 import 'package:cephalopod/models/theme_model.dart';
 
 import '../models/editor_model.dart';
@@ -20,7 +19,6 @@ class _ToolBarState extends State<ToolBar> {
   @override
   void initState() {
     super.initState();
-    nameController.text = "";
   }
 
   @override
@@ -32,10 +30,6 @@ class _ToolBarState extends State<ToolBar> {
   bool themeValue = false;
   @override
   Widget build(BuildContext context) {
-    nameController.text =
-        Provider.of<EditorModel>(context, listen: false).splitted_name;
-    nameController.selection = TextSelection.fromPosition(TextPosition(
-        offset: Provider.of<EditorModel>(context, listen: false).namePosition));
     return Scaffold(
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -46,11 +40,10 @@ class _ToolBarState extends State<ToolBar> {
               child: TextField(
                 style: TextStyle(color: Color.fromARGB(255, 142, 142, 142)),
                 cursorColor: Color.fromARGB(255, 228, 29, 129),
-                onChanged: (value) {
-                  Provider.of<EditorModel>(context, listen: false)
-                      .namePosition = nameController.selection.baseOffset;
+                onSubmitted: (value) {
                   setState(
                     () {
+                      nameController.text = value;
                       var oldPath =
                           Provider.of<EditorModel>(context, listen: false)
                               .activeFile;
@@ -66,8 +59,8 @@ class _ToolBarState extends State<ToolBar> {
                   );
                 },
                 controller: nameController
-                  ..text = Provider.of<EditorModel>(context, listen: false)
-                      .splitted_name,
+                  ..text = Provider.of<EditorModel>(context, listen: true)
+                      .splittedName,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(),
                   border: InputBorder.none,
