@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:cephalopod/core/file_item.dart';
 import 'package:cephalopod/core/summarize.dart';
 
 class EditorModel extends ChangeNotifier {
@@ -14,8 +12,6 @@ class EditorModel extends ChangeNotifier {
   bool populated = false;
   int _position = 0;
   int _namePosition = 0;
-  String _summary = "";
-  FileItem? _fileItem = null;
 
   String get text => _text;
   String get activeFile => _activeFile;
@@ -23,11 +19,9 @@ class EditorModel extends ChangeNotifier {
   int get position => _position;
   int get namePosition => _namePosition;
   String get summary => summarize(_text);
-  String get splitted_name => Platform.isLinux
+  String get splittedName => Platform.isLinux
       ? _activeFile.split('/').last
       : _activeFile.split('\\').last;
-
-  FileItem? get fileItem => _fileItem;
 
   set position(int position) {
     _position = position;
@@ -46,11 +40,6 @@ class EditorModel extends ChangeNotifier {
 
   void setActiveFilename(String name) {
     _activeFile = name;
-    notifyListeners();
-  }
-
-  set fileItem(FileItem? fileItem) {
-    _fileItem = fileItem;
     notifyListeners();
   }
 
@@ -78,6 +67,7 @@ class EditorModel extends ChangeNotifier {
     File(oldName).renameSync(path_);
     //update name
     _activeFile = path_;
+
     notifyListeners();
   }
 
