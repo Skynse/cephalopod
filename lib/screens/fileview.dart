@@ -1,4 +1,3 @@
-import 'package:cephalopod/core/summarize.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,14 +20,12 @@ class _FileViewState extends State<FileView> {
 
   @override
   void dispose() {
+    super.dispose();
     _controller.dispose();
     _nameController.dispose();
   }
 
   String filter = "";
-  bool themeValue = false;
-
-  List<String> summaries = [];
 
   @override
   Widget build(BuildContext context) {
@@ -62,51 +59,25 @@ class _FileViewState extends State<FileView> {
               },
             ),
             Expanded(
-              child: FutureBuilder(
-                future: scanDir(),
+              child: StreamBuilder(
+                stream: _files(),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onSecondaryTap: () {
-                            // open options dialog with rename, delete, export
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Options'),
-                                    content: Column(
-                                      children: [
-                                        Text('Rename'),
-                                        Text('Delete'),
-                                        Text('Export'),
-                                      ],
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                        child: Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
                           child: Row(children: [
                             Expanded(
                               child: ListTile(
                                 title: Text(snapshot.data[index].name),
                                 subtitle: Text(
-                                  summarize(snapshot.data[index].getFileText()),
+                                  snapshot.data[index].getSummary(),
                                 ),
                                 onTap: () {
                                   setState(() {
                                     Provider.of<EditorModel>(context,
                                         listen: false)
-                                      ..fileItem = snapshot.data[index]
                                       ..position = 0
                                       ..setActiveFilename(
                                           snapshot.data[index].path)
@@ -135,6 +106,8 @@ class _FileViewState extends State<FileView> {
                         );
                       },
                     );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
                   } else {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -147,7 +120,7 @@ class _FileViewState extends State<FileView> {
     );
   }
 
-  Future<List<FileItem>> scanDir() async {
+  Stream<List<FileItem>> _files() async* {
     List<FileItem> files = [];
     String name = await getApplicationDocumentsDirectory().then((dir) {
       return dir.path;
@@ -164,17 +137,15 @@ class _FileViewState extends State<FileView> {
             filename,
             entity.path,
           ));
-          summaries.add(summarize(entity.readAsStringSync()));
         } else if (filter == "") {
           files.add(FileItem(
             filename,
             entity.path,
           ));
-          summaries.add(summarize(entity.readAsStringSync()));
         }
       }
     }
-    return files;
+    yield files;
   }
 }
 
