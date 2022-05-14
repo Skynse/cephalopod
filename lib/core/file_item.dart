@@ -1,16 +1,25 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:cephalopod/models/editor_model.dart';
 import 'package:cephalopod/models/preview_model.dart';
+import 'package:cephalopod/core/summarize.dart';
 
 class FileItem {
   String name;
   String path;
 
   String getFileText() {
-    return File(path).readAsStringSync();
+    //check if file exists first
+    if (File(path).existsSync()) {
+      return File(path).readAsStringSync();
+    } else {
+      return ""; //workaround for files that have just been deleted but are still in the list
+    }
+  }
+
+  String getSummary() {
+    return summarize(getFileText());
   }
 
   get size => File(path).lengthSync() + 1;
