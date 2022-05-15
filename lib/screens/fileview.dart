@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,14 +20,26 @@ class _FileViewState extends State<FileView> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
+  Timer? timer;
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
     _nameController.dispose();
+    timer?.cancel();
   }
 
   String filter = "";
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(milliseconds: 5000), (Timer t) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
