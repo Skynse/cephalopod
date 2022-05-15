@@ -21,6 +21,7 @@ class _StatusBarState extends State<StatusBar> {
         body: Container(
       alignment: Alignment.bottomRight,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
             "char count: ${Provider.of<EditorModel>(context, listen: true).textlength}",
