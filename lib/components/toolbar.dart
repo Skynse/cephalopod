@@ -6,6 +6,8 @@ import 'package:cephalopod/models/theme_model.dart';
 import '../models/editor_model.dart';
 import 'package:cephalopod/core/file_item.dart';
 
+import 'dart:io';
+
 class ToolBar extends StatefulWidget {
   const ToolBar({Key? key}) : super(key: key);
 
@@ -47,7 +49,9 @@ class _ToolBarState extends State<ToolBar> {
                       var oldPath =
                           Provider.of<EditorModel>(context, listen: false)
                               .activeFile;
-                      var oldName = oldPath.split("/").last;
+                      var oldName = Platform.isLinux ? 
+                      oldPath.split("/").last : oldPath.split("\\").last;
+
 
                       var newpath = FileItem(
                         oldName,
